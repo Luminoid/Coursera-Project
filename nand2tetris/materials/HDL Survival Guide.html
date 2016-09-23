@@ -1,0 +1,259 @@
+<h2>HDL Survival Guide</h2>
+
+<h3>by Mark Armbrust</h3>
+
+<p>
+This guide is designed to help you understand and write HDL programs in the context of Nand2Tetris courses. It was written 
+in order to answer recurring issues that came up in many posts in the Q&A forum of the nand2tetris web site.
+These posts were made by people who worked on the course's hardware projects and got stuck for one reason or another.
+
+<h3>Terminology</h3>
+
+Throughout this document, we use the terms "HDL file", "HDL program", and "HDL implementation" interchangeably. Likewise, we use the terms "build a chip", "construct a chip", and "implement a chip" interchangeably. The term "HDL file stub" refers to a file that contains the HDL definition of a chip interface. That is, a stub file contains the chip name and the names of all the chip's input and output pins, without the chip's implementation, also known as the "PARTS" section of the HDL program. A stub file also contains the chip's documentation -- a succinct description of what the chip is supposed to do.  
+
+<h3>Project Files</h3>
+
+If you've downloaded the nand2tetris software, then there are now 13 directories (folders) on your computer, named <tt>projects/01</tt> ..., <tt>projects/13</tt>. Each directory contains all the files necessary to complete the respective project. The projects themselves are described in the <b>Course</b> page of the nand2tetris web site. Projects 1-5 focus on building the hardware platform of the Hack computer. Each project walks you through the construction of a certain subset of the Hack chip-set. The directory (folder) that accompanies each project contains stub HDL files for all the chips you need to build, as well as all the test scripts required to test your HDL implementations .The "only" thing that you have to do is extend the supplied stub HDL files into working chip implementations, i.e. chips that run in the supplied hardware simulator and successfully pass all the tests listed in the supplied 
+test scripts.
+
+<p>
+Other useful resources to help you complete the projects are the lecture slides given in the "Lecture" column of the <b>Course</b> page, as well as the relevant book chapters.
+
+<h3>Chip Implementation Order</h3>
+
+<p>
+Each project directory contains a set of HDL stub files, one for each chip that you have to build. It's important to understand that all the supplied HDL files contain no implementations (building these implementations is what the project is all about). For example, consider the construction of a Xor chip. If your <tt>Xor.hdl</tt> program will include, say, And and Or chip-parts, and you have not yet implemented the And and Or chips, your tests will fail even if your Xor implementation is correct.
+
+<p>
+Note however that if the project directory included no <tt>And.hdl</tt> and <tt>Or.hdl</tt> files at all, your <tt>Xor.hdl</tt> program will work properly. This sounds surprising, so here is the explanation. The hardware simulator, which is a Java program, features working Java implementations of all the chips necessary to build the Hack computer. When the simulator has to execute the logic of some chip-part, say And, taken from the Hack chip-set, it looks for an <tt>And.hdl</tt> file in the current project directory. At this point there are three possibilities:
+
+<ul>
+<li>No HDL file is found. In this case, the Java implementation of the chip kicks in and "covers" for the missing HDL implementation.
+<li>A stub HDL file is found. The simulator tries to execute it. But since a stub file contains no implementation, the execution fails.
+<li>A "normal" HDL file is found. The simulator executes it, reporting errors to the best of its ability.
+</ul>
+
+<p>
+Therefore, to avoid chip order implementation troubles, you can do one of two things. 
+First, you can implement your chips in the order presented in the book and in the project descriptions. Since the chips are presented "bottom-up", from basic chips to more complex ones, you will encounter no chip order implementation troubles.
+
+<p>
+A recommended alternative is to create a subdirectory called "stubs" and move all the supplied HDL 
+stub files into that directory. You can then move them into your working directory as needed.
+
+<p>
+Note that the <tt>.hdl</tt> file that you are working on and its associated <tt>.tst</tt> file must be in the same directory. If you will look at the header code of the supplied test script, you will see that it includes a command that loads the HDL file that it is supposed to test from the same working directory. Thus, if you load your HDL file into the simulator and then load the test script from a different directory, the test script will load and test a different HDL file. Proper usage is to load into the simulator either an <tt>.hdl</tt> 
+file or a <tt>.tst</tt> file, not both.
+
+<h3>HDL syntax and the meaning of <tt>"a=a"</tt></h3>
+
+HDL statements are used to describe how chip-parts are connected to each other, as well as to the input and output pins of the constructed chip. The syntax of these statements can be confusing, especially when pin names like <tt>in</tt>, <tt>out</tt>, <tt>a</tt> and <tt>b</tt> are used both by the chip-parts as well as by the constructed chip. This leads to statements like <tt>And(a=a, b=b, out=r)</tt>. This particular statement instructs to (i) connect the <tt>a</tt> and <tt>b</tt> input pins of the And chip-part to the <tt>a</tt> and <tt>b</tt> input pins of the constructed chip, (ii) create an internal pin ("wire") named <tt>r</tt>, and (iii) connect the output pin of the And chip-part to <tt>r</tt>.
+
+<p>
+Here is a simple rule that helps sort things out: the symbol on the left hand side of each 
+"=" symbol is always the name of a pin in a chip-part, and the symbol on the right hand side 
+is always the name of a pin or a wire in the constructed chip (the chip that you are building).
+
+<p>
+The following figure shows a diagram and HDL code of a Xor chip. The diagram uses color 
+coding to highlight which symbols "belong" to which chips. (Note that there are several different 
+ways to implement Xor; this is just one of them.)
+<p>
+
+<img src="xor-hdl-color-1-3-67.gif" alt="Color coded XOR schematic and HDL" height="350" width="350">
+
+<h3>HDL Syntax Errors</h3>
+
+The hardware simulator displays errors on the status bar at the bottom of its window. On some 
+computers with small screens these messages are off the bottom of the screen and are not visible.
+If you load your HDL and nothing show up in the HDL window in the simulator and you don't see an 
+error message, this is probably what's happening.
+
+<p>
+Your computer should have a way to move the window to see the message using the keyboard. For example, 
+on Windows use Alt+Space, M, and the arrow keys.
+
+<h3>Unconnected Pins</h3>
+
+The Hardware Simulator does not consider unconnected pins to be errors. It defaults any unconnected 
+input or output to be <i>false</i> (0). This can cause mysterious errors in your chip implementations.
+
+<p>
+If the output of your chip is always 0, make sure that your chip's output pin is connected to the output pin of 
+one of the chip-parts you are using. Double-check the names of the wires involved 
+in the chip's output. Typographic errors are particularly bad here since the simulator doesn't 
+throw errors on disconnected wires. For example, if you write <tt>SomeChip(..., sum=sun);</tt> the simulator will happily make a wire named <i>sun</i> and your chip's output will always be 0 (because, quite likely, the <tt>sun</tt> pin will not be connected to any other chip-part in your implementation, so nothing will be piped further from <tt>SomeChip</tt> onward).
+
+<p>
+If the output of a chip-part in your implementation does not appear to be working correctly, check that all 
+of its input pins are connected to something.
+
+<p>
+For a complete list of all the chips that you need in all the hardware projects, see the Hack Chip-Set API at the end of this document.
+
+<h3>Canonical Representation</h3>
+
+<p>
+The book introduces you to the canonical representation of a Boolean function. This representation 
+can be very useful for chips with small numbers of inputs. As the number of inputs grows, the complexity of the canonical 
+representation grows exponentially.
+
+<p>
+For example, the canonical representation of Mux has 4 three-variable terms; that of a Mux8Way would have 
+1024 11-variable terms. 
+Large canonical representations can be reduced with algebra, usually by computer programs. In the 
+case of Mux8Way it can be reduced to 8 four-input terms.
+
+<p>
+Clearly, this is not a practical approach for nand2tetris. You need to think about how to use the chips 
+you have already made to make the next chip (assuming you're following the recommended order). The projects are organized in such a way that often you need the chip that you have just made.
+
+<h3>Tests Are More Than Pass/Fail</h3>
+
+For every <i>chip</i><tt>.hdl</tt> file, your working directory also includes a test script, named <i>chip</i><tt>.tst</tt>, and a compare file, named <i>chip</i><tt>.cmp</tt>. Once your chip starts generating outputs, your directory will also include an output file named <i>chip</i><tt>.out</tt>.
+
+When your chip fails the test script, don't forget to consult the <tt>.out</tt> file. Inspect the listed output values, and seek clues to the failure. If you can't see the output file in the simulator environment (reported bug on some Macs), you can look at it in a text editor.
+
+<p>
+If you need to, you can copy the <i>chip</i><tt>.tst</tt> file to <i>myChip</i><tt>.tst</tt> and change it to give you more information
+about the behavior of your chip. Change the output file name in the <tt>output-file</tt> line and delete the <tt>compare-to</tt> line. This will cause the test to always run to completion.
+
+<p>
+You can also modify the <tt>output-list</tt> line to show the outputs of your internal wires. The output
+format specifier is fairly obvious. The format letters are <tt>B</tt> for binary, <tt>D</tt> for decimal, and <tt>X</tt> for hexadecimal</tt>.
+
+<h3>Testing A Chip In Isolation</h3>
+
+At some point you may become convinced that your chip is correct, but it is still 
+failing the test. The problem may be with one of the chip-parts used in your chip implementation.
+
+<p>
+You can diagnose which chip-part is causing the problem as follows. Create a test subdirectory and copy into it only the three <tt>.hdl</tt>, <tt>.tst</tt>, and <tt>.out</tt> files related to the chip that you are building. If your chip implementation passes its test in this subdirectory as-is (letting the simulator use the default Java implementation of the missing chip-parts), there must be a subtle problem with one of your chip-parts implementations, i.e. with one of the chips that you've built earlier in this project. Copy your other chips into this 
+test directory one by one, repeating the test, until you find the problematic chip.
+
+<p>
+Note also that the supplied tests, especially for more complex chips, cannot guarantee that the tested chips are 100% correct.
+
+<h3>HDL Is Not A Programming Language</h3>
+
+Go back to one of your chips that uses 3 or 4 parts. Reverse the order of the HDL statements that describe some of the chip-parts.
+<i>Will the chip still work?</i> You may be surprised that the answer is <i>yes</i>.
+
+<p>
+The reason that the chip still works is that HDL is a hardware <i>description</i> language (also known as a "declarative" language). It 
+describes the wiring connections that are needed to make the chip, not how it operates once power 
+is applied. It makes no difference what order the parts are put into a circuit board. 
+As long as all the parts get placed and connected together correctly, the 
+circuit board will function.
+
+<p>
+The Hardware Simulator "applies the power" and tests how the chip functions.
+
+<p>
+An important aspect of this is that there is no such thing as an "uninitialized variable" in HDL.
+If a wire is connected to an output somewhere in the HDL, it can be connected to any input. This
+is particularly important to understand for Chapter 3.
+
+<h3>Bit Numbering and Bus Syntax</h3>
+
+Hardware bits are numbered from right to left, starting with 0. When a bus is carrying a number,
+bit <i>n</i> is the bit with weight 2<sup><i>n</i></sup>. 
+
+<p>
+For example, when the book says <tt>sel=110</tt>, it means that a bus named <tt>sel</tt> receives the inputs <tt>110</tt>. That means <tt>sel[2]=1</tt>, <tt>sel[1]=1</tt> and <tt>sel[0]=0</tt>. Read Appendix A.5.3 in the book to learn about bus syntax.
+
+<h3>Sub-busing</h3>
+
+Sub-busing can only be used on buses that are named in the IN and OUT statements of an HDL file,
+or inputs and outputs of the chip-parts used in the PARTS section. If you need a sub-bus of an internal 
+bus, you must create the narrower bus as an output from a chip-part. For example:
+
+<pre>
+	CHIP Foo {
+	   IN in[16];
+	   OUT out;
+	PARTS:
+	   Something16 (in=in, out=notIn);
+	   Or8Way (in=notIn[4..11], out=out);
+	}
+</pre>
+
+This implementation causes an error on the Or8Way statement. This needs to be coded as:
+
+<pre>
+	   Something16 (in=in, out[4..11]=notIn);
+	   Or8Way (in=notIn, out=out);
+</pre>
+
+<h3>Multiple Outputs</h3>
+
+Sometimes you need more than one sub-bus connected to the output of a chip-part. Simply add more than
+one <tt>out=</tt> connection to the chip-part definition.
+
+<pre>
+	CHIP Foo {
+	   IN in[16];
+	   OUT out[8];
+	   PARTS:
+	       Not16 (in=in, out[0..7]=low8, out[8..15]=high8);
+	       Something8 (a=low8, b=high8, out=out);
+	}
+</pre>
+
+This also works if you want to use an output of a chip in further computations.
+
+<pre>
+	CHIP Foo {
+	IN a, b, c;
+	OUT out1, out2;
+	PARTS:
+	   Something (a=a, b=b, out=x, out=out1);
+	   Whatever (a=x, b=c, out=out2);
+	}
+</pre>
+
+<h3>The Hack chip-set API</h3>
+
+<p>
+Below is a list of all the chip interfaces in the Hack chip-set, prepared by Warren Toomey. If you need to use a chip-part, you can copy-paste the chip interface and proceed to fill in the missing data. This is a very useful list to have bookmarked or printed.
+
+<pre>
+
+  Add16(a= ,b= ,out= ); 
+  ALU(x= ,y= ,zx= ,nx= ,zy= ,ny= ,f= ,no= ,out= ,zr= ,ng= ); 
+  And16(a= ,b= ,out= ); 
+  And(a= ,b= ,out= ); 
+  ARegister(in= ,load= ,out= ); 
+  Bit(in= ,load= ,out= ); 
+  CPU(inM= ,instruction= ,reset= ,outM= ,writeM= ,addressM= ,pc= ); 
+  DFF(in= ,out= ); 
+  DMux4Way(in= ,sel= ,a= ,b= ,c= ,d= ); 
+  DMux8Way(in= ,sel= ,a= ,b= ,c= ,d= ,e= ,f= ,g= ,h= ); 
+  DMux(in= ,sel= ,a= ,b= ); 
+  DRegister(in= ,load= ,out= ); 
+  FullAdder(a= ,b= ,c= ,sum= ,carry= );  
+  HalfAdder(a= ,b= ,sum= , carry= ); 
+  Inc16(in= ,out= ); 
+  Keyboard(out= ); 
+  Memory(in= ,load= ,address= ,out= ); 
+  Mux16(a= ,b= ,sel= ,out= ); 
+  Mux4Way16(a= ,b= ,c= ,d= ,sel= ,out= ); 
+  Mux8Way16(a= ,b= ,c= ,d= ,e= ,f= ,g= ,h= ,sel= ,out= ); 
+  Mux(a= ,b= ,sel= ,out= ); 
+  Nand(a= ,b= ,out= ); 
+  Not16(in= ,out= ); 
+  Not(in= ,out= ); 
+  Or16(a= ,b= ,out= ); 
+  Or8Way(in= ,out= ); 
+  Or(a= ,b= ,out= ); 
+  PC(in= ,load= ,inc= ,reset= ,out= ); 
+  RAM16K(in= ,load= ,address= ,out= ); 
+  RAM4K(in= ,load= ,address= ,out= ); 
+  RAM512(in= ,load= ,address= ,out= ); 
+  RAM64(in= ,load= ,address= ,out= ); 
+  RAM8(in= ,load= ,address= ,out= ); 
+  Register(in= ,load= ,out= ); 
+  ROM32K(address= ,out= ); 
+  Screen(in= ,load= ,address= ,out= ); 
+  Xor(a= ,b= ,out= ); 
+</pre>
