@@ -1,0 +1,14 @@
+div {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background-color: Azure;
+}
+img {
+    position: absolute;
+}
+#leftSide {}
+#rightSide {
+    left: 500px;
+    border-left: 1px solid SlateGray;
+}

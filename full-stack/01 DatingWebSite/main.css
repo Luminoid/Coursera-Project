@@ -1,0 +1,34 @@
+fieldset {
+    width: 720px;
+    background-color: lightyellow;
+    border: 4px solid yellow;
+    margin-bottom: 10px;
+}
+
+fieldset > label {
+    display: inline-block;
+    text-align: right;
+    vertical-align: top;
+    width: 180px;
+}
+
+fieldset > label:hover {
+    color: darkgrey;
+}
+
+fieldset > input:hover {
+    color: darkgrey;
+}
+
+
+.range_label {
+    width: 40px;
+    text-align: center;
+    color: white;
+    background-color: rgb(255, 63, 22);
+}
+
+fieldset > textarea {
+    width: 360px;
+    height: 50px;
+}
