@@ -1,12 +1,7 @@
 ---
-title: "Introduction to R and RStudio"
+title: "Introduction to R and RStudio - KEY"
 output: statsr:::statswithr_lab
 ---
-
-<div id="instructions">
-Complete all **Exercises**, and submit answers to **Questions** on the Coursera 
-platform.
-</div>
 
 The goal of this lab is to introduce you to R and RStudio, which you'll be using
 throughout the course both to learn the statistical concepts discussed in the 
@@ -147,15 +142,18 @@ names(arbuthnot)
 1. How many variables are included in this data set? 
 <ol>
 <li> 2 </li>
-<li> **3** </li>
+<li> 3 **- CORRECT ANSWER** </li>
 <li> 4 </li>
 <li> 82 </li>
 <li> 1710 </li>
 </ol>
 
 <div id="exercise">
-**Exercise**: What years are included in this dataset? Hint: Take a look at the year 
-variable in the Data Viewer to answer this question.
+**Exercise**: What years are included in this dataset? Hint: Take a look at the 
+year variable in the Data Viewer to answer this question.
+```{r}
+arbuthnot$year
+```
 </div>
 
 You should see that the data frame contains the columns `year`,  `boys`, and 
@@ -199,7 +197,7 @@ variable that comes after me".
 2. What command would you use to extract just the counts of girls born? 
 <ol>
 <li> `arbuthnot$boys` </li>
-<li> **`arbuthnot$girls`** </li>
+<li> `arbuthnot$girls` **- CORRECT ANSWER**</li>
 <li> `girls` </li>
 <li> `arbuthnot[girls]` </li>
 <li> `$girls` </li>
@@ -215,7 +213,10 @@ complete data frame, we saw 82 rows, one on each line of the display. These data
 are no longer structured in a table with other variables, so they are displayed 
 one right after another. Objects that print out in this way are called vectors; 
 they represent a set of numbers. R has added numbers in [brackets] along the left
-side of the printout to indicate locations within the vector. For example, in the arbuthnot$boys vector, 5218  follows [1], indicating that 5218 is the first entry in the vector. And if [43] starts a line, then that would mean the first number on that line would represent the 43rd entry in the vector.
+side of the printout to indicate locations within the vector. For example, 5218 
+follows [1], indicating that 5218 is the first entry in the vector. And if [43] 
+starts a line, then that would mean the first number on that line would represent
+the 43rd entry in the vector.
 
 R has some powerful functions for making graphics. We can create a simple plot 
 of the number of girls baptized per year with the command
@@ -231,7 +232,7 @@ data.
 1. Which of the following best describes the number of girls baptised over the years included in this dataset? 
 <ol>
 <li> There appears to be no trend in the number of girls baptised from 1629 to 1710. </li>
-<li> **There is initially an increase in the number of girls baptised, which peaks around 1640. After 1640 there is a decrease in the number of girls baptised, but the number begins to increase again in 1660. Overall the trend is an increase in the number of girls baptised.** </li>
+<li> There is initially an increase in the number of girls baptised, which peaks around 1640. After 1640 there is a decrease in the number of girls baptised, but the number begins to increase again in 1660. Overall the trend is an increase in the number of girls baptised.  **- CORRECT ANSWER**</li>
 <li> There is initially an increase in the number of girls baptised. This number peaks around 1640 and then after 1640 the number of girls baptised decreases. </li>
 <li> The number of girls baptised has decreased over time. </li>
 <li> There is an initial increase in the number of girls baptised but this number appears to level around 1680 and not change after that time point. </li>
@@ -243,7 +244,7 @@ of the lower right panel of RStudio. Notice that the command above again looks l
 a function, this time with arguments separated by commas. 
 
 - The first argument is always the dataset. 
-- Next, we provide the variables from the dataset to be assigned to `aes`thetic 
+- Next, we provide thevariables from the dataset to be assigned to `aes`thetic 
 elements of the plot, e.g. the x and the y axes. 
 - Finally, we use another layer, separated by a `+` to specify the `geom`etric 
 object for the plot. Since we want to scatterplot, we use `geom_point`.
@@ -348,12 +349,12 @@ ggplot(data = arbuthnot, aes(x = year, y = total)) +
 <div id="exercise">
 **Exercise**: Now, generate a plot of the proportion of boys born over time. What 
 do you see? 
-</div>
-
 ```{r plot-proportion-of-boys-over-time}
-# type your code for the Exercise here, and Knit
-ggplot(data = arbuthnot, aes(x = year, y = boys/total)) + geom_line() + geom_point()
+ggplot(data = arbuthnot, aes(x = year, y = boys / total)) +
+  geom_line() +
+  geom_point()
 ```
+</div>
 
 Finally, in addition to simple mathematical operators like subtraction and 
 division, you can ask R to make comparisons like greater than, `>`, less than,
@@ -393,26 +394,24 @@ your workspace.
 4. How many variables are included in this data set?
 <ol>
 <li> 2 </li>
-<li> **3** </li>
+<li> 3 **- CORRECT ANSWER**</li>
 <li> 4 </li>
 <li> 74 </li>
 <li> 2013 </li>
 </ol>
 
 ```{r variables-in-present}
-# type your code for Question 4 here, and Knit
 dim(present)
 ```
 
 <div id="exercise">
 **Exercise**: What years are included in this dataset? **Hint:** Use the `range` 
 function and `present$year` as its argument.
+```{r years-in-present-data}
+present$year
+```
 </div>
 
-```{r years-in-present-data}
-# type your code for Exercise here, and Knit
-range(present$year)
-```
 
 5. Calculate the total number of births for each year and store these values in a new 
 variable called `total` in the `present` dataset. Then, calculate the proportion of 
@@ -421,30 +420,32 @@ the same dataset. Plot these values over time and based on the plot determine if
 following statement is true or false: The proportion of boys born in the US has 
 decreased over time. 
 <ol>
-<li> **True** </li>
+<li> True **- CORRECT ANSWER**</li>
 <li> False </li>
 </ol>
 
 ```{r prop-boys-over-time}
-# type your code for Question 5 here, and Knit
-present <- present %>% mutate(total = boys + girls)
-present <- present %>% mutate(prop_boys = boys / total)
-ggplot(data = present, aes(x = year, y = prop_boys)) + geom_line()
+present <- present %>%
+  mutate(total = boys + girls) %>%
+  mutate(prop_boys = boys / total)
+ggplot(data = present, aes(x = year, y = boys / total)) +
+  geom_line() +
+  geom_point()
 ```
-
 
 6. Create a new variable called `more_boys` which contains the value of either `TRUE` 
 if that year had more boys than girls, or `FALSE` if that year did not. Based on this 
 variable which of the following statements is true? 
 <ol>
-<li> Every year there are more girls born than boys. </li>
-<li> **Every year there are more boys born than girls.** </li>
+<li> Every year there are more girls born than boys.</li>
+<li> Every year there are more boys born than girls. **- CORRECT ANSWER**</li>
 <li> Half of the years there are more boys born, and the other half more girls born. </li>
 </ol>
 
 ```{r more-boys-per-year}
-# type your code for Question 6 here, and Knit
-present <- present %>% mutate(more_boys = boys > girls)
+present <- present %>%
+  mutate(more_boys = boys > girls)
+present$more_boys
 ```
 
 
@@ -452,33 +453,36 @@ present <- present %>% mutate(more_boys = boys > girls)
 <ol>
 <li> There appears to be no trend in the boy-to-girl ratio from 1940 to 2013. </li>
 <li> There is initially an increase in boy-to-girl ratio, which peaks around 1960. After 1960 there is a decrease in the boy-to-girl ratio, but the number begins to increase in the mid 1970s. </li>
-<li> **There is initially a decrease in the boy-to-girl ratio, and then an increase between 1960 and 1970, followed by a decrease.** </li>
+<li> There is initially a decrease in the boy-to-girl ratio, and then an increase between 1960 and 1970, followed by a decrease. **- CORRECT ANSWER**</li>
 <li> The boy-to-girl ratio has increased over time. </li>
 <li> There is an initial decrease in the boy-to-girl ratio born but this number appears to level around 1960 and remain constant since then. </li>
 </ol>
 
 ```{r prop-boy-girl-over-time}
-# type your code for Question 7 here, and Knit
-present <- present %>% mutate(prop_boy_girl = boys / girls)
-ggplot(data = present, aes(x = year, y = prop_boy_girl)) + geom_line()
+present <- present %>%
+  mutate(prop_boy_girl = boys / girls)
+ggplot(data = present, aes(x = year, y = prop_boy_girl)) +
+  geom_line() +
+  geom_point()
 ```
 
 8. In what year did we see the most total number of births in the U.S.? *Hint:* Sort 
 your dataset in descending order based on the `total` column. You can do this 
 interactively in the data viewer by clicking on the arrows next to the variable 
-names. Or to arrange the data in a descenting order with new function: `descr` (for 
+names. Or to arrange the data in a descenting order with new function: `desc` (for 
 descending order).
 <ol>
 <li> 1940 </li>
 <li> 1957 </li>
 <li> 1961 </li>
 <li> 1991 </li>
-<li> **2007** </li>
+<li> 2007 **- CORRECT ANSWER**</li>
 </ol>
 
 ```{r most-total-births}
-# type your code for Question 8 here
-present %>% arrange(desc(total))
+present %>%
+  mutate(total = boys + girls) %>%
+  arrange(desc(total))
 ```
 
 ## Resources for learning R and working in RStudio
@@ -492,8 +496,8 @@ data visualization) extensively. If you are googling for R code, make sure
 to also include these package names in your search query. For example, instead
 of googling "scatterplot in R", google "scatterplot in R with ggplot2".
 
-- The following cheathseets may come in handy throughout the course. Note that some 
-of the code on these cheatsheets may be too advanced for this course, however 
+- The following cheatsheets may come in handy throughout the course. Note that some 
+of the code on these cheatsheets may be too advanced for this course, however the
 majority of it will become useful as you progress through the course material.
     - [Data wrangling cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
     - [Data visualization cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf)
