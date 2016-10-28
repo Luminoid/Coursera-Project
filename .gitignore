@@ -1,2 +1,3 @@
 .DS_Store
 nand2tetris/tools/bin/*.dat
+statistics/.Rhistory
