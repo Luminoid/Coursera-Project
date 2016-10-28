@@ -8,6 +8,12 @@ The Hong Kong University of Science and Technology
     - [Front-End Web UI Frameworks and Tools](https://www.coursera.org/learn/web-frameworks)
 - [Solution](full-stack)
 
+## Master Statistics with R
+Duke University
+- [Course](https://www.coursera.org/specializations/statistics)
+    - [Introduction to Probability and Data](https://www.coursera.org/learn/probability-intro)
+- [Solution](statistics)
+
 ## Game Design and Development
 Michigan State University
 - [Course](https://www.coursera.org/specializations/game-development)
