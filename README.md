@@ -12,7 +12,7 @@ The Hong Kong University of Science and Technology
 Duke University
 - [Course](https://www.coursera.org/specializations/statistics)
     - [Introduction to Probability and Data](https://www.coursera.org/learn/probability-intro)
-- [Solution](statistics)
+- [Solution](statistics)(key from DataCamp)
 
 ## Game Design and Development
 Michigan State University
